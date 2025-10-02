@@ -3,7 +3,7 @@ function Footer() {
         <footer>
             <img src="Logo.png" alt="Little Lemon Logo"/>
             <section>
-                <h2>Doormat Navigation</h2>
+                <h4>Doormat Navigation</h4>
                 <ul>
                     <li>Home</li>
                     <li>About</li>
@@ -14,7 +14,7 @@ function Footer() {
                 </ul>
             </section>
             <section>
-                <h2>Contact</h2>
+                <h4>Contact</h4>
                 <ul>
                     <li>Address: 123 Main St, Anytown, USA</li>
                     <li>Phone: (123) 456-7890</li>
@@ -22,7 +22,7 @@ function Footer() {
                 </ul>
             </section>
             <section>
-                <h2>Social Media Links</h2>
+                <h4>Social Media Links</h4>
                 <ul>
                     <li><a href="https://www.facebook.com/littlelemon">Facebook</a></li>
                     <li><a href="https://www.instagram.com/littlelemon">Instagram</a></li>
