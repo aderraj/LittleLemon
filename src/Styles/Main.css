@@ -2,17 +2,72 @@
   display: flex;
   padding: 50px 20px;
   background-color: #e0e0e0;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
 }
 
 .hero-text {
-  flex: 0 1 60%;
-  padding-right: 20px;
+  flex: 0 1 45%;
+  padding-left: 20px;
+}
+
+.hero-image {
+  flex: 0 1 45%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .hero img {
-  max-width: 100%;
+  width: 100%;
+  max-width: 450px;
   height: auto;
   border-radius: 30px;
+  object-fit: cover;
+}
+
+.hero button {
+  margin-top: 20px;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding: 30px 20px;
+    text-align: center;
+  }
+  
+  .hero-text {
+    flex: 1;
+    padding-left: 0;
+    order: 1;
+  }
+
+  .hero-image {
+    flex: 1;
+    justify-content: center;
+    order: 2;
+  }
+
+  .hero img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 30px 15px;
+    flex-direction: column;
+  }
+
+  .hero-text {
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
 }
 
 @import './Menu.css';

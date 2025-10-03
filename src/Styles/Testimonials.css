@@ -6,9 +6,9 @@
 
 .testimonial-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
     gap: 20px;
-    align-items: start;
+    align-items: stretch;
 }
 
 .testimonial-card {
@@ -17,5 +17,38 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: left;
+}
+
+.testimonial-card p {
+    font-style: italic;
+    color: #555;
+    padding-top: 10px;
+}
+
+.rating {
+    margin-bottom: 15px;
+    color: #495E57;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-profile img {
+    border-radius: 16%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.user-profile h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1rem;
 }
 
