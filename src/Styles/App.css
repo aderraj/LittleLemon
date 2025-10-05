@@ -36,8 +36,3 @@ img {
     max-width: 100%;
     height: auto;
 }
-
-@import './Header.css';
-@import './Footer.css';
-@import './Main.css';
-@import './Card.css';

@@ -1,3 +1,5 @@
+import '../Styles/Card.css';
+
 function Card({ title, price, description, image }) {
     return (
         <div className="card">

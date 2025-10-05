@@ -1,21 +1,21 @@
 import Menu from "./Menu";
 import Testimonials from "./Testimonials";
 import About from "./About";
+import Hero from "./Hero";
+import '../Styles/Main.css';
 
 function Main() {
     return (
         <main>
-            <div className="hero">
-                <section className="hero-text">
-                    <h1>Little Lemon</h1>
-                    <h2>Chicago</h2>
-                    <p>Your favorite place for delicious meals!</p>
-                    <button>Reserve a Table</button>
-                </section>
-                <section className="hero-image">
-                    <img src="./HeroImage.png" alt="Delicious food at Little Lemon"/>
-                </section>
-            </div>
+            <Hero 
+                title="Little Lemon"
+                subtitle="Chicago"
+                description="Your favorite place for delicious meals!"
+                buttonText="Reserve a Table"
+                buttonLink="/reservations"
+                imageSrc="./HeroImage.png"
+                imageAlt="Delicious food at Little Lemon"
+            />
             <Menu />
             <Testimonials />
             <About />

@@ -1,3 +1,5 @@
+import '../Styles/Header.css'
+
 function Header({children}) {
     return (
         <header>

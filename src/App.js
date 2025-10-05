@@ -1,16 +1,20 @@
 import './Styles/App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './Components/Header';
 import Main from './Components/Main';
 import Footer from './Components/Footer';
 import Nav from './Components/Nav';
+import Reservations from './Reservation';
 
 function App() {
   return (
-    <>
+    <Router>
       <Header> <Nav/> </Header>
-      <Main/>
-      <Footer/>
-    </>
+      <Routes>
+        <Route path="/" element={<><Main/><Footer/></>} />
+        <Route path="/reservations" element={<><Reservations/><Footer/></>} />
+      </Routes>
+    </Router>
   );
 }
 
