@@ -1,4 +1,6 @@
 import Hero from "./Components/Hero";
+import ReservationForm from "./Components/ReservationForm";
+
 function Reservations() {
     return (
         <>
@@ -6,6 +8,8 @@ function Reservations() {
                 title="Reservations"
                 description="Welcome to our reservation page. Here you can make your reservation."
             />
+            <ReservationForm />
+
         </>
     );
 }
