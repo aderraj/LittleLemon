@@ -17,6 +17,10 @@
   background-color: white;
 }
 
+.react-datepicker__time-list-item--disabled {
+  display: none;
+}
+
 .react-datepicker__header {
   background-color: #F7FAFC; /* gray.50 */
   border-bottom: 1px solid #E2E8F0; /* gray.200 */
