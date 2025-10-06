@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useReducer } from 'react';
 import { Formik, Form, Field } from 'formik';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -21,16 +21,57 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  AspectRatio,
   Image,
   useColorModeValue,
   InputGroup,
   InputRightElement,
 } from '@chakra-ui/react';
 
-const ReservationForm = () => {
+// API functions - these are loaded from the external script
+const fetchAPI = (date) => {
+  // Check if the fetchAPI function is available from the external script
+  if (typeof window.fetchAPI === 'function') {
+    return window.fetchAPI(date);
+  }
+  // Fallback implementation if API is not available
+  return [
+    '17:00',
+    '17:30', 
+    '18:00',
+    '18:30',
+    '19:00',
+    '19:30',
+    '20:00',
+    '20:30',
+    '21:00',
+    '21:30',
+  ];
+};
+
+
+
+// Initialize available times for today's date
+const initializeTimes = () => {
+  const today = new Date();
+  return fetchAPI(today);
+};
+
+// Update available times based on selected date
+const updateTimes = (state, action) => {
+  switch (action.type) {
+    case 'UPDATE_TIMES':
+      return fetchAPI(action.date);
+    default:
+      return state;
+  }
+};
+
+const ReservationForm = ({ submitForm, onReservationData }) => {
   const paymentFormRef = useRef(null);
   const navigate = useNavigate();
+  
+  // State management for available times using useReducer
+  const [availableTimes, dispatch] = useReducer(updateTimes, [], initializeTimes);
 
   const scrollToRef = (ref) => {
     if (ref.current) {
@@ -64,16 +105,44 @@ const ReservationForm = () => {
   const validate = (values) => {
     const errors = {};
 
-    if (!values.fullName || values.fullName.trim().length < 2) {
+    // Full name validation
+    if (!values.fullName) {
       errors.fullName = 'Please enter your full name';
+    } else if (typeof values.fullName !== 'string') {
+      errors.fullName = 'Invalid name format';
+    } else if (values.fullName.trim().length < 2) {
+      errors.fullName = 'Please enter your full name (at least 2 characters)';
+    } else if (values.fullName.trim().length > 50) {
+      errors.fullName = 'Full name must be less than 50 characters';
+    } else if (!/^[a-zA-Z\s]+$/.test(values.fullName.trim())) {
+      errors.fullName = 'Full name can only contain letters and spaces';
     }
 
+    // Date validation
     if (!values.date) {
       errors.date = 'Please select a date';
+    } else {
+      const selectedDate = new Date(values.date);
+      const today = new Date();
+      const maxDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+      
+      if (selectedDate < today.setHours(0,0,0,0)) {
+        errors.date = 'Please select a future date';
+      } else if (selectedDate > maxDate) {
+        errors.date = 'Please select a date within the next 30 days';
+      }
     }
 
+    // Time validation
     if (!values.customTime) {
       errors.customTime = 'Please select a time';
+    }
+
+    // Party size validation
+    if (values.partySize < 1) {
+      errors.partySize = 'Party size must be at least 1 person';
+    } else if (values.partySize > 12) {
+      errors.partySize = 'Party size cannot exceed 12 people';
     }
 
     return errors;
@@ -81,22 +150,29 @@ const ReservationForm = () => {
 
   const onSubmit = (values, { setSubmitting }) => {
     console.log('Reservation details:', values);
+    
+    // Save reservation data to parent component
+    if (onReservationData) {
+      onReservationData(values);
+    }
+    
+    // Always scroll to payment form when reservation is confirmed
     scrollToRef(paymentFormRef);
     setSubmitting(false);
   };
 
-  const timeSlots = [
-    { value: '17:00', label: '5:00 PM' },
-    { value: '17:30', label: '5:30 PM' },
-    { value: '18:00', label: '6:00 PM' },
-    { value: '18:30', label: '6:30 PM' },
-    { value: '19:00', label: '7:00 PM' },
-    { value: '19:30', label: '7:30 PM' },
-    { value: '20:00', label: '8:00 PM' },
-    { value: '20:30', label: '8:30 PM' },
-    { value: '21:00', label: '9:00 PM' },
-    { value: '21:30', label: '9:30 PM' },
-  ];
+  // Convert available times from API to time slots format
+  const timeSlots = availableTimes.map(time => {
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const isPM = hour >= 12;
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    const period = isPM ? 'PM' : 'AM';
+    return {
+      value: time,
+      label: `${displayHour}:${minutes} ${period}`
+    };
+  });
 
   const occasions = [
     'Birthday',
@@ -120,14 +196,8 @@ const ReservationForm = () => {
 
   const minSelectableDate = today > lastSlotTime ? new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1) : beginningOfToday;
 
-  const minTime = new Date(`1970-01-01T${timeSlots[0].value}`);
-  const maxTime = new Date(`1970-01-01T${timeSlots[timeSlots.length - 1].value}`);
-
+  // eslint-disable-next-line no-unused-vars
   const allowedTimes = new Set(timeSlots.map(slot => slot.value));
-  const filterTime = (time) => {
-    const timeString = time.toTimeString().slice(0, 5);
-    return allowedTimes.has(timeString);
-  };
 
   const parseTimeString = (timeStr) => {
     const [time, period] = timeStr.split(' ');
@@ -143,18 +213,11 @@ const ReservationForm = () => {
   const labelColor = useColorModeValue('gray.600', 'gray.400');
   const inputFocusBorderColor = useColorModeValue('yellow.400', 'yellow.300');
 
-  const specificTimes = [
-    new Date(1970, 0, 1, 17, 0, 0, 0),
-    new Date(1970, 0, 1, 17, 30, 0, 0),
-    new Date(1970, 0, 1, 18, 0, 0, 0),
-    new Date(1970, 0, 1, 18, 30, 0, 0),
-    new Date(1970, 0, 1, 19, 0, 0, 0),
-    new Date(1970, 0, 1, 19, 30, 0, 0),
-    new Date(1970, 0, 1, 20, 0, 0, 0),
-    new Date(1970, 0, 1, 20, 30, 0, 0),
-    new Date(1970, 0, 1, 21, 0, 0, 0),
-    new Date(1970, 0, 1, 21, 30, 0, 0),
-  ];
+  // Convert available times to Date objects for the time picker
+  const specificTimes = availableTimes.map(time => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return new Date(1970, 0, 1, hours, minutes, 0, 0);
+  });
   const CustomInput = React.forwardRef(({ value, onClick, onChange }, ref) => (
     <Input
       value={value}
@@ -277,7 +340,13 @@ const ReservationForm = () => {
                               {...field}
                               id="date"
                               selected={field.value ? new Date(field.value) : null}
-                              onChange={(val) => form.setFieldValue(field.name, val)}
+                              onChange={(val) => {
+                                form.setFieldValue(field.name, val);
+                                // Update available times when date changes
+                                if (val) {
+                                  dispatch({ type: 'UPDATE_TIMES', date: val });
+                                }
+                              }}
                               minDate={minSelectableDate}
                               maxDate={maxDateObj}
                               dateFormat="MMMM d, yyyy"
@@ -421,27 +490,145 @@ const ReservationForm = () => {
               }}
               validate={(values) => {
                 const errors = {};
-                if (!values.cardNumber || !/^\d{16}$/.test(values.cardNumber)) {
-                  errors.cardNumber = 'Please enter a valid 16-digit card number';
-                }
-                if (!values.expiryDate || !/^\d{2}\/\d{2}$/.test(values.expiryDate)) {
-                  errors.expiryDate = 'Please enter expiry date as MM/YY';
-                }
-                if (!values.cvv || !/^\d{3}$/.test(values.cvv)) {
-                  errors.cvv = 'Please enter a valid 3-digit CVV';
-                }
-                if (!values.nameOnCard || values.nameOnCard.trim().length < 2) {
+                
+                // Name on card validation
+                if (!values.nameOnCard) {
                   errors.nameOnCard = 'Please enter the name on the card';
+                } else if (typeof values.nameOnCard !== 'string') {
+                  errors.nameOnCard = 'Invalid name format';
+                } else if (values.nameOnCard.trim().length < 2) {
+                  errors.nameOnCard = 'Please enter the name on the card';
+                } else if (values.nameOnCard.trim().length > 50) {
+                  errors.nameOnCard = 'Name must be less than 50 characters';
+                } else if (!/^[a-zA-Z\s]+$/.test(values.nameOnCard.trim())) {
+                  errors.nameOnCard = 'Name can only contain letters and spaces';
                 }
+                
+                // Card number validation
+                if (!values.cardNumber) {
+                  errors.cardNumber = 'Please enter a card number';
+                } else {
+                  // Convert to string if it's a number
+                  const cardNumberStr = String(values.cardNumber);
+                  const cardNum = cardNumberStr.replace(/\s/g, '');
+                  
+                  if (!/^\d{16}$/.test(cardNum)) {
+                    errors.cardNumber = 'Please enter a valid 16-digit card number';
+                  } else {
+                    // Enhanced Luhn algorithm check
+                    let sum = 0;
+                    let shouldDouble = false;
+                    
+                    // Process digits from right to left
+                    for (let i = cardNum.length - 1; i >= 0; i--) {
+                      let digit = parseInt(cardNum[i]);
+                      
+                      if (shouldDouble) {
+                        digit *= 2;
+                        if (digit > 9) {
+                          digit -= 9;
+                        }
+                      }
+                      
+                      sum += digit;
+                      shouldDouble = !shouldDouble;
+                    }
+                    
+                    if (sum % 10 !== 0) {
+                      errors.cardNumber = 'Please enter a valid card number';
+                    }
+                    
+                    // Additional validation: reject obvious test/fake numbers
+                    const invalidPatterns = [
+                      /^(\d)\1+$/, // All same digits (1111111111111111)
+                      /^(0123456789|1234567890|9876543210|0987654321).*$/, // Sequential
+                      /^1234.*$/, // Numbers starting with 1234
+                      /^0000.*$/, // Numbers starting with 0000
+                      /^(1111|2222|3333|4444|5555|6666|7777|8888|9999).*$/, // Repeating groups
+                    ];
+                    
+                    const commonTestNumbers = [
+                      '1234123412341234',
+                      '1111111111111111', 
+                      '4444444444444444',
+                      '0000000000000000',
+                      '1234567890123456'
+                    ];
+                    
+                    const isInvalidPattern = invalidPatterns.some(pattern => pattern.test(cardNum));
+                    const isTestNumber = commonTestNumbers.includes(cardNum);
+                    
+                    if (isInvalidPattern || isTestNumber) {
+                      errors.cardNumber = 'Please enter a valid card number';
+                    }
+                  }
+                }
+                
+                // Expiry date validation
+                if (!values.expiryDate) {
+                  errors.expiryDate = 'Please enter expiry date';
+                } else if (!/^\d{2}\/\d{2}$/.test(values.expiryDate)) {
+                  errors.expiryDate = 'Please enter expiry date as MM/YY';
+                } else {
+                  const [month, year] = values.expiryDate.split('/');
+                  const currentDate = new Date();
+                  const currentYear = currentDate.getFullYear() % 100;
+                  const currentMonth = currentDate.getMonth() + 1;
+                  
+                  if (parseInt(month) < 1 || parseInt(month) > 12) {
+                    errors.expiryDate = 'Please enter a valid month (01-12)';
+                  } else if (parseInt(year) < currentYear || 
+                           (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+                    errors.expiryDate = 'Card has expired';
+                  }
+                }
+                
+                // CVV validation
+                if (!values.cvv) {
+                  errors.cvv = 'Please enter CVV';
+                } else {
+                  const cvvStr = String(values.cvv);
+                  if (!/^\d{3,4}$/.test(cvvStr)) {
+                    errors.cvv = 'Please enter a valid 3 or 4-digit CVV';
+                  }
+                }
+                
                 return errors;
               }}
-              onSubmit={(values, { setSubmitting, resetForm }) => {
-                console.log('Payment submitted:', values);
-                setTimeout(() => {
-                  resetForm();
-                  setSubmitting(false);
-                  navigate('/confirmation');
-                }, 1000);
+              onSubmit={async (values, { setSubmitting, resetForm }) => {
+                console.log('Payment form submitted:', values);
+                
+                // Use the submitForm function passed as props for the complete booking submission
+                if (submitForm) {
+                  try {
+                    const success = submitForm({
+                      payment: values,
+                      // You might want to include reservation details here too
+                      timestamp: new Date().toISOString()
+                    });
+                    
+                    if (success) {
+                      console.log('Complete booking successfully submitted to API');
+                      resetForm();
+                      // Navigation will be handled by submitForm function
+                    } else {
+                      console.error('Failed to submit complete booking to API');
+                      // Don't reset form on failure so user can retry
+                    }
+                  } catch (error) {
+                    console.error('Error during form submission:', error);
+                  } finally {
+                    setSubmitting(false);
+                  }
+                } else {
+                  // Fallback behavior if submitForm is not provided
+                  console.log('No submitForm function provided, using fallback');
+                  setTimeout(() => {
+                    resetForm();
+                    setSubmitting(false);
+                    navigate('/confirmation');
+                  }, 1000);
+                }
               }}
             >
               {({ isSubmitting, errors, touched }) => (
@@ -477,7 +664,9 @@ const ReservationForm = () => {
                             placeholder="1234567890123456"
                             variant="filled"
                             focusBorderColor={inputFocusBorderColor}
-                            type="number"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                           />
                           <FormErrorMessage>{errors.cardNumber}</FormErrorMessage>
                         </FormControl>
@@ -515,7 +704,10 @@ const ReservationForm = () => {
                               placeholder="123"
                               variant="filled"
                               focusBorderColor={inputFocusBorderColor}
-                              type="number"
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              maxLength="4"
                             />
                             <FormErrorMessage>{errors.cvv}</FormErrorMessage>
                           </FormControl>
@@ -584,6 +776,12 @@ const ReservationForm = () => {
       </HStack>
     </Box>
   );
+};
+
+// Default props to handle cases where props are not provided
+ReservationForm.defaultProps = {
+  submitForm: null,
+  onReservationData: null
 };
 
 export default ReservationForm;

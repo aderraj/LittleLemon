@@ -42,4 +42,44 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script>
+    // Implement the external API directly (from courseraap/capstone/main/api.js)
+    console.log('Loading Little Lemon API...');
+    
+    const seededRandom = function (seed) {
+      var m = 2**35 - 31;
+      var a = 185852;
+      var s = seed % m;
+      return function () {
+        return (s = s * a % m) / m;
+      };
+    }
+
+    const fetchAPI = function(date) {
+      let result = [];
+      let random = seededRandom(date.getDate());
+
+      for(let i = 17; i <= 23; i++) {
+        if(random() < 0.5) {
+          result.push(i + ':00');
+        }
+        if(random() < 0.5) {
+          result.push(i + ':30');
+        }
+      }
+      return result;
+    };
+
+    const submitAPI = function(formData) {
+      return true;
+    };
+
+    // Make functions available globally
+    window.fetchAPI = fetchAPI;
+    window.submitAPI = submitAPI;
+    
+    console.log('✅ API loaded successfully');
+    console.log('fetchAPI available:', typeof window.fetchAPI === 'function');
+    console.log('submitAPI available:', typeof window.submitAPI === 'function');
+  </script>
 </html>
