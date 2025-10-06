@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../Styles/DatePicker.css';
 import { CalendarIcon, TimeIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -29,6 +30,7 @@ import {
 
 const ReservationForm = () => {
   const paymentFormRef = useRef(null);
+  const navigate = useNavigate();
 
   const scrollToRef = (ref) => {
     if (ref.current) {
@@ -436,9 +438,9 @@ const ReservationForm = () => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 console.log('Payment submitted:', values);
                 setTimeout(() => {
-                  alert('Payment processed successfully!');
                   resetForm();
                   setSubmitting(false);
+                  navigate('/confirmation');
                 }, 1000);
               }}
             >

@@ -5,6 +5,7 @@ import Main from './Components/Main';
 import Footer from './Components/Footer';
 import Nav from './Components/Nav';
 import Reservations from './Reservation';
+import ConfirmationPage from './Components/ConfirmationPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<><Main/><Footer/></>} />
         <Route path="/reservations" element={<><Reservations/><Footer/></>} />
+        <Route path="/confirmation" element={<><ConfirmationPage/><Footer/></>} />
       </Routes>
     </Router>
   );
