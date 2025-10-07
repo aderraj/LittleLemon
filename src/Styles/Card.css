@@ -11,6 +11,13 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
+  transition: transform 0.2s ease;
+  position: relative;
+  height: 400px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
 }
 
 .card-header {
@@ -21,14 +28,157 @@
     border-bottom: 1px solid #eee;
 }
 
+.card-header h4 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.card-header span {
+    color: #495e57;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
 .card img {
   width: 100%;
-  height: auto;
+  height: 180px;
+  object-fit: cover;
 }
 
 .card p {
-  padding: 15px;
+  padding: 15px 15px 5px 15px;
   font-size: 1rem;
   color: #333;
+  line-height: 1.4;
+  height: 100px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.card button {
+  background-color: #495e57;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 15px 15px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+}
+
+.card button:hover {
+  background-color: #3a4a45;
+}
+
+/* Responsive styles for cards in scrollable container */
+@media (max-width: 768px) {
+  .scrollable-card-container .card {
+    height: 350px;
+  }
+  
+  .scrollable-card-container .card img {
+    height: 150px;
+  }
+  
+  .scrollable-card-container .card p {
+    height: 85px;
+    padding: 10px 10px 5px 10px;
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+  
+  .scrollable-card-container .card-header h4 {
+    font-size: 1rem;
+  }
+  
+  .scrollable-card-container .card-header span {
+    font-size: 0.9rem;
+  }
+  
+  .scrollable-card-container .card button {
+    padding: 8px 16px;
+    margin: 0 10px;
+    font-size: 0.8rem;
+    bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scrollable-card-container .card {
+    height: 300px;
+  }
+  
+  .scrollable-card-container .card img {
+    height: 120px;
+  }
+  
+  .scrollable-card-container .card-header {
+    padding: 8px 10px;
+  }
+  
+  .scrollable-card-container .card-header h4 {
+    font-size: 0.9rem;
+  }
+  
+  .scrollable-card-container .card-header span {
+    font-size: 0.8rem;
+  }
+  
+  .scrollable-card-container .card p {
+    padding: 8px 8px 5px 8px;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    height: 65px;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+  
+  .scrollable-card-container .card button {
+    padding: 6px 12px;
+    margin: 0 8px;
+    font-size: 0.7rem;
+    bottom: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .scrollable-card-container .card {
+    height: 270px;
+  }
+  
+  .scrollable-card-container .card img {
+    height: 100px;
+  }
+  
+  .scrollable-card-container .card-header h4 {
+    font-size: 0.8rem;
+  }
+  
+  .scrollable-card-container .card-header span {
+    font-size: 0.75rem;
+  }
+  
+  .scrollable-card-container .card p {
+    padding: 6px 6px 5px 6px;
+    font-size: 0.75rem;
+    height: 55px;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  
+  .scrollable-card-container .card button {
+    padding: 5px 10px;
+    margin: 0 6px;
+    font-size: 0.65rem;
+    bottom: 6px;
+  }
 }
 

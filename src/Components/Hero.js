@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom';
 import '../Styles/Main.css';
 
-function Hero({ 
-  title, 
-  subtitle, 
-  description, 
-  children, 
-  imageSrc, 
-  imageAlt, 
-  buttonText, 
-  buttonLink, 
-  onButtonClick 
+function Hero({
+  title,
+  subtitle,
+  description,
+  children,
+  imageSrc,
+  imageAlt,
+  buttonText,
+  buttonLink,
+  onButtonClick
 }) {
   return (
     <div className="hero">

@@ -45,7 +45,6 @@
   <script>
     // Implement the external API directly (from courseraap/capstone/main/api.js)
     console.log('Loading Little Lemon API...');
-    
     const seededRandom = function (seed) {
       var m = 2**35 - 31;
       var a = 185852;
@@ -77,7 +76,6 @@
     // Make functions available globally
     window.fetchAPI = fetchAPI;
     window.submitAPI = submitAPI;
-    
     console.log('✅ API loaded successfully');
     console.log('fetchAPI available:', typeof window.fetchAPI === 'function');
     console.log('submitAPI available:', typeof window.submitAPI === 'function');
