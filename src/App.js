@@ -7,7 +7,7 @@ import Footer from './Components/Footer';
 import Reservations from './Reservation';
 import ConfirmationPage from './Components/ConfirmationPage';
 import ConfirmedBooking from './Components/ConfirmedBooking';
-import Bookings from './Components/Bookings';
+import Bookings from './Components/BookingsPage';
 import MenuPage from './Components/MenuPage';
 import Contact from './Components/Contact';
 import { BookingProvider } from './contexts/BookingContext';

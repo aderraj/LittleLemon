@@ -8,8 +8,7 @@
 .about-container {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 100px;
+    gap: 300px;
     width: 100%;
     max-width: 1636px;
     margin: 40px auto;
@@ -18,7 +17,7 @@
 
 .about-content {
     flex: 1;
-    max-width: 500px;
+    max-width: 600px;
 }
 
 .about-title h1 {
@@ -62,7 +61,7 @@
 
 .about-img-1 {
     top: 0;
-    right: 5%;
+    right: 0%;
     z-index: 1;
 }
 

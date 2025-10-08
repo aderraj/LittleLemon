@@ -1,5 +1,5 @@
-import Card from './Card';
 import '../Styles/MenuPage.css';
+import Card from './Card';
 import Hero from './Hero';
 
 function MenuPage() {
@@ -35,7 +35,7 @@ function MenuPage() {
             title: "Grilled Salmon",
             price: "$24.99",
             description: "Fresh Atlantic salmon grilled to perfection, served with lemon rice and seasonal vegetables.",
-            image: "/GrilledSalamon.png"
+            image: "/GrilledSalmon.png"
         },
         {
             title: "Moussaka",
@@ -61,12 +61,6 @@ function MenuPage() {
             description: "Fresh linguine with shrimp, scallops, and mussels in garlic sauce.",
               image: "/SeafoodPasta.png"
         },
-        {
-            title: "Vegetarian Platter",
-            price: "$16.99",
-            description: "Roasted vegetables, quinoa tabbouleh, and homemade falafel.",
-              image: "/VegetarianPlatter.png"
-        }
     ];
 
     const desserts = [
@@ -113,7 +107,7 @@ function MenuPage() {
             title: "Mediterranean Tea",
             price: "$3.50",
             description: "Blend of Mediterranean herbs and spices.",
-              image: "/GreekCoffee.png"
+              image: "/Tea.png"
         },
         {
             title: "House Wine",
@@ -125,8 +119,9 @@ function MenuPage() {
 
     return (
         <div className="menu-page">
-            <Hero title="Little Lemon Menu"
-                subtitle="Discover our authentic Mediterranean cuisine"
+            <Hero title="Little Lemon"
+                subtitle="Menu"
+                description="Discover our authentic Mediterranean cuisine"
             />
 
             <div className="menu-section">
