@@ -44,7 +44,7 @@ Little Lemon is a Mediterranean restaurant website that provides a seamless onli
 - Interactive booking form with date/time selection
 - Real-time availability checking
 - Form validation using Formik & Yup
-- Guest count selection (1-10 guests)
+- Guest count selection (1-12 guests)
 - Occasion selection (Birthday, Anniversary, Business, etc.)
 - Special requests field
 - Booking confirmation page
