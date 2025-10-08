@@ -13,7 +13,6 @@ import {
   useColorModeValue,
   Badge,
   Divider,
-  SimpleGrid,
   Icon,
 } from '@chakra-ui/react';
 import { CalendarIcon, TimeIcon } from '@chakra-ui/icons';
@@ -53,7 +52,7 @@ const Bookings = () => {
 
   return (
     <>
-      <Hero 
+      <Hero
         title="My Bookings"
         subtitle="Manage Your Reservations"
         description="View your current and past reservations at Little Lemon"
@@ -89,9 +88,9 @@ const Bookings = () => {
             {bookings.length === 0 ? (
               <Box flex={1} h="full" py={8} >
                 <Card
-                  bg={'var(--highlight-white)'} 
-                  py={12} 
-                  w="full" 
+                  bg={'var(--highlight-white)'}
+                  py={12}
+                  w="full"
                   h="full"
                   borderRadius={'var(--border-radius)'}
                   boxShadow="lg"
@@ -124,20 +123,20 @@ const Bookings = () => {
                 </Card>
               </Box>
             ) : (
-              <Box 
-                display="flex" 
-                flexWrap="wrap" 
-                justifyContent="center" 
+              <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent="center"
                 gap={{ base: 4, md: 6, lg: 8 }}
                 maxW="1400px"
                 mx="auto"
                 px={{ base: 4, md: 6, lg: 8 }}
               >
                 {bookings.map((booking) => (
-                  <Card 
-                    key={booking.id} 
-                    bg={'var(--highlight-white)'} 
-                    boxShadow="lg" 
+                  <Card
+                    key={booking.id}
+                    bg={'var(--highlight-white)'}
+                    boxShadow="lg"
                     _hover={{ boxShadow: 'xl', transform: 'translateY(-2px)' }}
                     borderRadius={'var(--border-radius)'}
                     border="1px solid"
@@ -153,10 +152,10 @@ const Bookings = () => {
                   >
                     <CardHeader pb={4}>
                       <HStack justify="space-between" align="flex-start" w="full">
-                        <Text 
-                          fontSize={'var(--type-medium)'} 
-                          color={'var(--primary-green)'} 
-                          fontWeight="700" 
+                        <Text
+                          fontSize={'var(--type-medium)'}
+                          color={'var(--primary-green)'}
+                          fontWeight="700"
                           fontFamily={'var(--font-body)'}
                           textTransform="uppercase"
                           letterSpacing="0.5px"
@@ -164,8 +163,8 @@ const Bookings = () => {
                         >
                           Booking #{booking.bookingNumber}
                         </Text>
-                        <Badge 
-                          colorScheme={getStatusColor(booking.status)} 
+                        <Badge
+                          colorScheme={getStatusColor(booking.status)}
                           variant="subtle"
                           borderRadius={'var(--border-radius)'}
                           fontSize={'var(--type-small)'}
@@ -181,73 +180,71 @@ const Bookings = () => {
                     </CardHeader>
                     <CardBody pt={0}>
                       <VStack align="start" spacing={5}>
-                        <VStack align="start" spacing={4} w="full">
-                          <HStack spacing={4} align="center">
-                            <Box minW="20px" display="flex" justifyContent="center">
+                        <VStack align="start" spacing={5} w="full">
+                          <HStack spacing={30} align="baseline">
+                            <Box minW="70px">
                               <Icon as={CalendarIcon} color={'var(--primary-yellow)'} w={5} h={5} />
-                            <Text 
-                              fontWeight="400" 
-                              color={'var(--highlight-dark)'} 
-                              fontFamily={'var(--font-body)'} 
+                            </Box>
+                            <Text
+                              fontWeight="400"
+                              color={'var(--highlight-dark)'}
+                              fontFamily={'var(--font-body)'}
                               fontSize={'var(--type-medium)'}
                               lineHeight={'var(--type-medium)'}
                             >
                               {booking.date}
                             </Text>
-                            </Box>
                           </HStack>
-                          <HStack spacing={4} align="center">
-                            <Box minW="20px" display="flex" justifyContent="center">
+                          <HStack spacing={30} align="baseline">
+                            <Box minW="70px">
                               <Icon as={TimeIcon} color={'var(--primary-yellow)'} w={5} h={5} />
-                            <Text 
-                              fontWeight="400" 
-                              color={'var(--highlight-dark)'} 
-                              fontFamily={'var(--font-body)'} 
+                            </Box>
+                            <Text
+                              fontWeight="400"
+                              color={'var(--highlight-dark)'}
+                              fontFamily={'var(--font-body)'}
                               fontSize={'var(--type-medium)'}
                               lineHeight={'var(--type-medium)'}
                             >
                               {booking.time}
                             </Text>
-                            </Box>
                           </HStack>
-                          <HStack spacing={4} align="center">
+                          <HStack spacing={'30px'} align="baseline">
                             <Box minW="70px">
-                              <Text 
-                                color={'var(--primary-green)'} 
-                                fontSize={'var(--type-base-rem)'} 
-                                fontFamily={'var(--font-body)'} 
+                              <Text
+                                color={'var(--primary-green)'}
+                                fontFamily={'var(--font-body)'}
                                 fontWeight="700"
                                 lineHeight={'var(--type-base-rem)'}
                               >
                                 Guests:
                               </Text>
                             </Box>
-                            <Text 
-                              fontWeight="400" 
-                              color={'var(--highlight-dark)'} 
-                              fontFamily={'var(--font-body)'} 
+                            <Text
+                              fontWeight="400"
+                              color={'var(--highlight-dark)'}
+                              fontFamily={'var(--font-body)'}
                               fontSize={'var(--type-medium)'}
                               lineHeight={'var(--type-medium)'}
                             >
                               {booking.guests} {booking.guests === 1 ? 'person' : 'people'}
                             </Text>
                           </HStack>
-                          <HStack spacing={4} align="center">
+                          <HStack spacing={'16px'} align="baseline">
                             <Box minW="70px">
-                              <Text 
-                                color={'var(--primary-green)'} 
-                                fontSize={'var(--type-base-rem)'} 
-                                fontFamily={'var(--font-body)'} 
+                              <Text
+                                color={'var(--primary-green)'}
+                                fontFamily={'var(--font-body)'}
                                 fontWeight="700"
                                 lineHeight={'var(--type-base-rem)'}
                               >
                                 Occasion:
                               </Text>
                             </Box>
-                            <Text 
-                              fontWeight="400" 
-                              color={'var(--highlight-dark)'} 
-                              fontFamily={'var(--font-body)'} 
+                            <Text
+                              fontWeight="400"
+                              color={'var(--highlight-dark)'}
+                              fontFamily={'var(--font-body)'}
                               fontSize={'var(--type-medium)'}
                               lineHeight={'var(--type-medium)'}
                               textTransform="capitalize"
