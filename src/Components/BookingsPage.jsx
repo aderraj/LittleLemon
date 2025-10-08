@@ -16,14 +16,14 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { CalendarIcon, TimeIcon } from '@chakra-ui/icons';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Hero from './Hero';
 import { useBookings } from '../contexts/BookingContext';
 
 const Bookings = () => {
-  const cardBgColor = useColorModeValue('white', 'gray.700');
   const textColor = useColorModeValue('gray.700', 'gray.50');
   const mutedTextColor = useColorModeValue('gray.500', 'gray.400');
+  const navigate = useNavigate();
 
   const { bookings, deleteBooking } = useBookings();
 
@@ -31,6 +31,10 @@ const Bookings = () => {
     if (window.confirm(`Are you sure you want to cancel booking ${bookingNumber}?`)) {
       deleteBooking(bookingId);
     }
+  };
+
+  const handleModifyBooking = (bookingId) => {
+    navigate(`/modify-booking/${bookingId}`);
   };
 
   const getStatusColor = (status) => {
@@ -57,31 +61,50 @@ const Bookings = () => {
         subtitle="Manage Your Reservations"
         description="View your current and past reservations at Little Lemon"
       />
-      <Box minH="100vh" py={8}>
-        <Container maxW="1636px" h="full">
-          <VStack spacing={8} align="stretch" h="full">
-            <HStack justify="space-between" align="center" flexWrap="wrap">
-              <VStack align="start" spacing={2}>
-                <Heading as="h2" size="lg" color={textColor}>
-                  Your Reservations
-                </Heading>
-                <Text color={mutedTextColor}>
-                  {bookings.length} reservation{bookings.length !== 1 ? 's' : ''} found
-                </Text>
-              </VStack>
-              <Button
-                as={RouterLink}
-                to="/reservations"
-                bg="yellow.400"
-                color="white"
-                size="lg"
-                _hover={{ bg: 'yellow.500' }}
-                _active={{ bg: 'yellow.600' }}
-                borderRadius={'var(--border-radius)'}
+      <Box minH="100vh" py={{ base: 4, md: 8 }}>
+        <Container maxW="1636px" h="full" px={{ base: 4, md: 6 }}>
+          <VStack spacing={{ base: 6, md: 8 }} align="stretch" h="full">
+            <VStack 
+              spacing={{ base: 4, md: 0 }}
+              align={{ base: "stretch", md: "center" }}
+              direction={{ base: "column", md: "row" }}
+            >
+              <HStack 
+                justify="space-between" 
+                align="center" 
+                w="full"
+                flexDir={{ base: "column", md: "row" }}
+                spacing={{ base: 4, md: 0 }}
               >
-                Make New Reservation
-              </Button>
-            </HStack>
+                <VStack align={{ base: "center", md: "start" }} spacing={2} w={{ base: "full", md: "auto" }}>
+                  <Heading 
+                    as="h2" 
+                    size={{ base: "md", md: "lg" }} 
+                    color={textColor}
+                    textAlign={{ base: "center", md: "left" }}
+                  >
+                    Your Reservations
+                  </Heading>
+                  <Text color={mutedTextColor} fontSize={{ base: "sm", md: "md" }}>
+                    {bookings.length} reservation{bookings.length !== 1 ? 's' : ''} found
+                  </Text>
+                </VStack>
+                <Button
+                  as={RouterLink}
+                  to="/reservations"
+                  bg="var(--primary-yellow)"
+                  color="var(--highlight-dark)"
+                  size={{ base: "md", md: "lg" }}
+                  w={{ base: "full", md: "auto" }}
+                  _hover={{ bg: 'yellow.500' }}
+                  _active={{ bg: 'yellow.600' }}
+                  borderRadius={'var(--border-radius)'}
+                  textTransform={'uppercase'}
+                >
+                  Make New Reservation
+                </Button>
+              </HStack>
+            </VStack>
 
             <Divider />
 
@@ -109,8 +132,8 @@ const Bookings = () => {
                       <Button
                         as={RouterLink}
                         to="/reservations"
-                        bg="yellow.400"
-                        color="white"
+                        bg="var(--primary-yellow)"
+                        color="var(--highlight-dark)"
                         size="lg"
                         _hover={{ bg: 'yellow.500' }}
                         borderRadius={'var(--border-radius)'}
@@ -128,27 +151,23 @@ const Bookings = () => {
                 flexWrap="wrap"
                 justifyContent="center"
                 gap={{ base: 4, md: 6, lg: 8 }}
-                maxW="1400px"
                 mx="auto"
-                px={{ base: 4, md: 6, lg: 8 }}
+                w="full"
               >
                 {bookings.map((booking) => (
                   <Card
                     key={booking.id}
-                    bg={'var(--highlight-white)'}
                     boxShadow="lg"
                     _hover={{ boxShadow: 'xl', transform: 'translateY(-2px)' }}
                     borderRadius={'var(--border-radius)'}
                     border="1px solid"
-                    borderColor={'var(--secondary-beige)'}
+                    borderColor={'var(--primary-green)'}
                     transition="all 0.2s ease-in-out"
-                    w={{ base: "100%", sm: "450px", md: "430px", lg: "410px", xl: "430px" }}
-                    minW={{ base: "320px", md: "410px" }}
-                    maxW="550px"
+                    w={{ base: "100%", sm: "calc(50% - 16px)", md: "calc(50% - 24px)", lg: "calc(33.333% - 32px)", xl: "400px" }}
+                    maxW="450px"
                     h="auto"
                     minH="380px"
-                    flex="0 0 auto"
-                    p={7}
+                    p={{ base: 5, md: 7 }}
                   >
                     <CardHeader pb={4}>
                       <HStack justify="space-between" align="flex-start" w="full">
@@ -181,9 +200,9 @@ const Bookings = () => {
                     <CardBody pt={0}>
                       <VStack align="start" spacing={5}>
                         <VStack align="start" spacing={5} w="full">
-                          <HStack spacing={30} align="baseline">
-                            <Box minW="70px">
-                              <Icon as={CalendarIcon} color={'var(--primary-yellow)'} w={5} h={5} />
+                          <HStack spacing={{ base: 3, md: 30 }} align="baseline">
+                            <Box minW={{ base: "50px", md: "70px" }}>
+                              <Icon as={CalendarIcon} color={'var(--secondary-orange)'} w={5} h={5} />
                             </Box>
                             <Text
                               fontWeight="400"
@@ -195,9 +214,9 @@ const Bookings = () => {
                               {booking.date}
                             </Text>
                           </HStack>
-                          <HStack spacing={30} align="baseline">
-                            <Box minW="70px">
-                              <Icon as={TimeIcon} color={'var(--primary-yellow)'} w={5} h={5} />
+                          <HStack spacing={{ base: 3, md: 30 }} align="baseline">
+                            <Box minW={{ base: "50px", md: "70px" }}>
+                              <Icon as={TimeIcon} color={'var(--secondary-orange)'} w={5} h={5} />
                             </Box>
                             <Text
                               fontWeight="400"
@@ -209,8 +228,8 @@ const Bookings = () => {
                               {booking.time}
                             </Text>
                           </HStack>
-                          <HStack spacing={'30px'} align="baseline">
-                            <Box minW="70px">
+                          <HStack spacing={{ base: 3, md: '30px' }} align="baseline">
+                            <Box minW={{ base: "50px", md: "70px" }}>
                               <Text
                                 color={'var(--primary-green)'}
                                 fontFamily={'var(--font-body)'}
@@ -230,8 +249,8 @@ const Bookings = () => {
                               {booking.guests} {booking.guests === 1 ? 'person' : 'people'}
                             </Text>
                           </HStack>
-                          <HStack spacing={'16px'} align="baseline">
-                            <Box minW="70px">
+                          <HStack spacing={{ base: 3, md: '16px' }} align="baseline">
+                            <Box minW={{ base: "50px", md: "70px" }}>
                               <Text
                                 color={'var(--primary-green)'}
                                 fontFamily={'var(--font-body)'}
@@ -256,15 +275,14 @@ const Bookings = () => {
 
                         <Divider borderColor={'var(--secondary-beige)'} />
 
-                        <HStack spacing={3} w="full">
+                        <HStack spacing={3} w="full" flexWrap={{ base: "wrap", sm: "nowrap" }}>
                           {booking.status === 'confirmed' && (
                             <>
                               <Button
-                                size="md"
-                                variant="outline"
-                                borderColor={'var(--primary-yellow)'}
+                                size={{ base: "sm", md: "md" }}
+                                bg={'var(--primary-yellow)'}
                                 color={'var(--primary-green)'}
-                                _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                                _hover={{ bg: '#d1b211' }}
                                 borderRadius={'var(--border-radius)'}
                                 fontFamily={'var(--font-body)'}
                                 fontWeight="700"
@@ -273,15 +291,16 @@ const Bookings = () => {
                                 px={4}
                                 py={2}
                                 flex={1}
+                                minW={{ base: "120px", sm: "auto" }}
+                                onClick={() => handleModifyBooking(booking.id)}
                               >
                                 Modify
                               </Button>
                               <Button
-                                size="md"
-                                variant="outline"
-                                borderColor="red.400"
-                                color="red.500"
-                                _hover={{ bg: 'red.50', borderColor: 'red.500' }}
+                                size={{ base: "sm", md: "md" }}
+                                bg="red.400"
+                                color="var(--highlight-white)"
+                                _hover={{ bg: 'red.500' }}
                                 borderRadius={'var(--border-radius)'}
                                 fontFamily={'var(--font-body)'}
                                 fontWeight="700"
@@ -290,6 +309,7 @@ const Bookings = () => {
                                 px={4}
                                 py={2}
                                 flex={1}
+                                minW={{ base: "120px", sm: "auto" }}
                                 onClick={() => handleCancelBooking(booking.id, booking.bookingNumber)}
                               >
                                 Cancel
@@ -298,11 +318,10 @@ const Bookings = () => {
                           )}
                           {booking.status === 'completed' && (
                             <Button
-                              size="md"
-                              variant="outline"
-                              borderColor={'var(--primary-green)'}
-                              color={'var(--primary-green)'}
-                              _hover={{ bg: 'var(--primary-green)', color: 'var(--highlight-white)' }}
+                              size={{ base: "sm", md: "md" }}
+                              bg={'var(--primary-yellow)'}
+                              color={'var(--highlight-white)'}
+                              _hover={{ bg: '#d1b211' }}
                               borderRadius={'var(--border-radius)'}
                               fontFamily={'var(--font-body)'}
                               fontWeight="700"
@@ -332,9 +351,10 @@ const Bookings = () => {
                   <Button
                     as={RouterLink}
                     to="/reservations"
-                    bg="yellow.400"
-                    color="white"
+                    bg="var(--primary-yellow)"
+                    color="var(--highlight-dark)"
                     size="lg"
+                    fontWeight={"700"}
                     _hover={{ bg: 'yellow.500' }}
                     _active={{ bg: 'yellow.600' }}
                     borderRadius={'var(--border-radius)'}

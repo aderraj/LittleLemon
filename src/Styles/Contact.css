@@ -108,7 +108,6 @@
   }
 }
 
-/* Small devices */
 @media (max-width: 480px) {
   .contact-content {
     padding: 1rem;

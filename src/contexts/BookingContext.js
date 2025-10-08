@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import PropTypes from 'prop-types';
 
-// Initial bookings data (sample data)
 const initialBookings = [
   {
     id: 1,
@@ -26,14 +26,12 @@ const initialBookings = [
   }
 ];
 
-// Booking actions
 const bookingActions = {
   ADD_BOOKING: 'ADD_BOOKING',
   UPDATE_BOOKING: 'UPDATE_BOOKING',
   DELETE_BOOKING: 'DELETE_BOOKING'
 };
 
-// Booking reducer
 const bookingReducer = (state, action) => {
   switch (action.type) {
     case bookingActions.ADD_BOOKING:
@@ -49,16 +47,12 @@ const bookingReducer = (state, action) => {
   }
 };
 
-// Create context
 const BookingContext = createContext();
 
-// Booking provider component
 export const BookingProvider = ({ children }) => {
   const [bookings, dispatch] = useReducer(bookingReducer, initialBookings);
 
-  // Generate unique booking number
   const generateBookingNumber = () => {
-    const year = new Date().getFullYear();
     const existingNumbers = bookings.map(b => 
       parseInt(b.bookingNumber.replace('LL', ''))
     );
@@ -66,10 +60,9 @@ export const BookingProvider = ({ children }) => {
     return `LL${nextNumber}`;
   };
 
-  // Add new booking
   const addBooking = (reservationData, paymentData) => {
     const newBooking = {
-      id: Date.now(), // Simple ID generation
+      id: Date.now(),
       date: reservationData.date ? new Date(reservationData.date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -93,24 +86,27 @@ export const BookingProvider = ({ children }) => {
     return newBooking;
   };
 
-  // Update booking
-  const updateBooking = (bookingId, updates) => {
+  const updateBooking = (updatedBooking) => {
     dispatch({ 
       type: bookingActions.UPDATE_BOOKING, 
-      payload: { ...updates, id: bookingId }
+      payload: updatedBooking
     });
   };
 
-  // Delete booking
   const deleteBooking = (bookingId) => {
     dispatch({ type: bookingActions.DELETE_BOOKING, payload: bookingId });
+  };
+
+  const getBookingById = (bookingId) => {
+    return bookings.find(booking => booking.id === bookingId);
   };
 
   const value = {
     bookings,
     addBooking,
     updateBooking,
-    deleteBooking
+    deleteBooking,
+    getBookingById
   };
 
   return (
@@ -120,13 +116,16 @@ export const BookingProvider = ({ children }) => {
   );
 };
 
-// Hook to use booking context
 export const useBookings = () => {
   const context = useContext(BookingContext);
   if (!context) {
     throw new Error('useBookings must be used within a BookingProvider');
   }
   return context;
+};
+
+BookingProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default BookingContext;

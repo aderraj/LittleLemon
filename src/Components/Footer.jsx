@@ -6,7 +6,7 @@ function Footer() {
     return (
         <footer>
             <div className="footer-container">
-                <img src="MonoLemon.png" alt="Little Lemon Logo"/>
+                <img src="/MonoLogo.png" alt="Little Lemon Logo"/>
                 <section>
                     <h4>Doormat Navigation</h4>
                     <ul>

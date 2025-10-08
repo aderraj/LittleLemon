@@ -8,6 +8,18 @@ header {
   flex-wrap: wrap;
   max-width: 1636px;
   margin: 0 auto;
+  gap: 20px;
+}
+
+header img {
+  height: 50px;
+  width: auto;
+}
+
+nav {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
 nav ul {
@@ -15,20 +27,41 @@ nav ul {
   display: flex;
   gap: 15px;
   margin: 0;
+  padding: 0;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 @media (max-width: 768px) {
   header {
-    justify-content: center;
-    text-align: center;
+    flex-direction: column;
     padding: 15px;
+    gap: 15px;
+  }
+
+  header img {
+    height: 40px;
+  }
+
+  nav {
+    width: 100%;
+    justify-content: center;
   }
 
   nav ul {
-    padding: 10px 0;
     justify-content: center;
+    gap: 8px;
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 12px;
+  }
+
+  nav ul {
+    gap: 6px;
   }
 }
 
@@ -38,4 +71,38 @@ nav li {
   font-size: var(--type-medium);
   font-weight: bold;
   text-transform: uppercase;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--highlight-dark);
+  padding: 10px 16px;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+nav a:hover {
+  background-color: var(--primary-yellow);
+  color: var(--highlight-dark);
+  transform: translateY(-2px);
+}
+
+nav a:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  nav a {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  nav a {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
 }

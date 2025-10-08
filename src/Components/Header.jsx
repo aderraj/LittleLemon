@@ -6,6 +6,7 @@ function Nav() {
         <nav>
             <ul>
                 <li><Link to="/">Home</Link></li>
+                <li><Link to="/menu">Menu</Link></li>
                 <li><Link to="/bookings">My Bookings</Link></li>
                 <li><Link to="/reservations">Make Reservation</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
@@ -17,8 +18,9 @@ function Nav() {
 function Header() {
     return (
         <header>
-            <meta name="og:title" content="Little Lemon Restaurant"/>
-             <img src="./Logo.png" alt="Little Lemon Logo" />
+            <Link to="/">
+                <img src="/Logo.png" alt="Little Lemon Logo" />
+            </Link>
             <Nav />
         </header>
     );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from './Card';
 import '../Styles/Menu.css';
@@ -10,7 +10,7 @@ function Menu() {
     const [showLeftButton, setShowLeftButton] = useState(false);
     const [showRightButton, setShowRightButton] = useState(false);
 
-    const specialItems = [
+    const specialItems = useMemo(() => [
         {
             title: "Greek Salad",
             price: "$12.99",
@@ -41,7 +41,7 @@ function Menu() {
             description: "Traditional Greek moussaka, a hearty casserole of layered eggplant, seasoned ground beef, rich tomato sauce, and a creamy béchamel topping, baked until golden and bubbling.",
             image: "/Moussaka.png"
         }
-    ];
+    ], []);
 
     const checkScroll = () => {
         const container = scrollContainerRef.current;

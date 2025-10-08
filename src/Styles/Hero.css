@@ -11,7 +11,7 @@
   margin-bottom: 0px;
 }
 
-.hero-text { flex: 1; max-width: 500px;}
+.hero-text { flex: 1; max-width: 800px;}
 
 .hero-text h1 { color: var(--primary-yellow); line-height: 0.65em;}
 

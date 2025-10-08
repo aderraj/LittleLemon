@@ -1,9 +1,10 @@
 import React, { useRef, useReducer } from 'react';
+import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../Styles/DatePicker.css';
-import { CalendarIcon, TimeIcon } from '@chakra-ui/icons';
+import { CalendarIcon, TimeIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -13,7 +14,6 @@ import {
   FormLabel,
   Heading,
   Input,
-  Select,
   VStack,
   HStack,
   Text,
@@ -25,15 +25,16 @@ import {
   useColorModeValue,
   InputGroup,
   InputRightElement,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react';
 
-// API functions - these are loaded from the external script
 const fetchAPI = (date) => {
-  // Check if the fetchAPI function is available from the external script
   if (typeof window.fetchAPI === 'function') {
     return window.fetchAPI(date);
   }
-  // Fallback implementation if API is not available
   return [
     '17:00',
     '17:30', 
@@ -48,15 +49,11 @@ const fetchAPI = (date) => {
   ];
 };
 
-
-
-// Initialize available times for today's date
 const initializeTimes = () => {
   const today = new Date();
   return fetchAPI(today);
 };
 
-// Update available times based on selected date
 const updateTimes = (state, action) => {
   switch (action.type) {
     case 'UPDATE_TIMES':
@@ -66,11 +63,10 @@ const updateTimes = (state, action) => {
   }
 };
 
-const ReservationForm = ({ submitForm, onReservationData }) => {
+const ReservationForm = ({ submitForm = null, onReservationData = null }) => {
   const paymentFormRef = useRef(null);
   const navigate = useNavigate();
   
-  // State management for available times using useReducer
   const [availableTimes, dispatch] = useReducer(updateTimes, [], initializeTimes);
 
   const scrollToRef = (ref) => {
@@ -118,13 +114,12 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
       errors.fullName = 'Full name can only contain letters and spaces';
     }
 
-    // Date validation
     if (!values.date) {
       errors.date = 'Please select a date';
     } else {
       const selectedDate = new Date(values.date);
       const today = new Date();
-      const maxDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+      const maxDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
       
       if (selectedDate < today.setHours(0,0,0,0)) {
         errors.date = 'Please select a future date';
@@ -133,12 +128,10 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
       }
     }
 
-    // Time validation
     if (!values.customTime) {
       errors.customTime = 'Please select a time';
     }
 
-    // Party size validation
     if (values.partySize < 1) {
       errors.partySize = 'Party size must be at least 1 person';
     } else if (values.partySize > 12) {
@@ -149,19 +142,14 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
   };
 
   const onSubmit = (values, { setSubmitting }) => {
-    console.log('Reservation details:', values);
-    
-    // Save reservation data to parent component
     if (onReservationData) {
       onReservationData(values);
     }
     
-    // Always scroll to payment form when reservation is confirmed
     scrollToRef(paymentFormRef);
     setSubmitting(false);
   };
 
-  // Convert available times from API to time slots format
   const timeSlots = availableTimes.map(time => {
     const [hours, minutes] = time.split(':');
     const hour = parseInt(hours);
@@ -196,9 +184,6 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
 
   const minSelectableDate = today > lastSlotTime ? new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1) : beginningOfToday;
 
-  // eslint-disable-next-line no-unused-vars
-  const allowedTimes = new Set(timeSlots.map(slot => slot.value));
-
   const parseTimeString = (timeStr) => {
     const [time, period] = timeStr.split(' ');
     let [hours, minutes] = time.split(':').map(Number);
@@ -207,13 +192,9 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   };
 
-  const bgColor = useColorModeValue('gray.50', 'gray.800');
   const formBgColor = useColorModeValue('white', 'gray.700');
-  const textColor = useColorModeValue('gray.700', 'gray.50');
-  const labelColor = useColorModeValue('gray.600', 'gray.400');
   const inputFocusBorderColor = useColorModeValue('yellow.400', 'yellow.300');
 
-  // Convert available times to Date objects for the time picker
   const specificTimes = availableTimes.map(time => {
     const [hours, minutes] = time.split(':').map(Number);
     return new Date(1970, 0, 1, hours, minutes, 0, 0);
@@ -228,15 +209,21 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
       focusBorderColor={inputFocusBorderColor}
       placeholder="Select a date"
       readOnly
+      color="var(--highlight-dark)"
+      fontFamily={'var(--font-body)'}
+      borderRadius="var(--border-radius)"
+      bg="var(--highlight-white)"
+      _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
     />
   ));
 
   return (
-    <Box bg={bgColor} w="full">
+    <Box w="full">
       <HStack
-        maxW="1200px"
+        maxW="1636px"
         mx="auto"
-        p={{ base: 4, md: 8 }}
+        my="60px"
+        px="20px"
         spacing={10}
         alignItems="stretch"
         flexDir={{ base: 'column', md: 'row' }}
@@ -246,6 +233,7 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
           w={{ base: '100%', md: '50%' }}
           spacing={8}
           alignItems="stretch"
+          justifyContent="center"
         >
           <VStack
             as={Box}
@@ -255,9 +243,11 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
             borderRadius="xl"
             boxShadow="md"
           >
-            <Heading as="h2" size="lg" color={textColor} fontWeight="600">
-              Make a Reservation
-            </Heading>
+            <VStack spacing={2} align="start" w="full">
+              <Heading as="h1" size="lg" color={'var(--primary-green)'} fontWeight="800" textTransform={'uppercase'}>
+                Make a Reservation
+              </Heading>
+            </VStack>
             <Formik
               initialValues={initialValues}
               validate={validate}
@@ -269,8 +259,10 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                     <FormControl>
                       <FormLabel
                         htmlFor="partySize"
-                        fontWeight="medium"
-                        color={labelColor}
+                        fontWeight="bold"
+                        fontFamily={'var(--font-heading)'}
+                        fontSize={'var(--type-medium)'}
+                        color={'var(--primary-green)'}
                       >
                         Party Size: {values.partySize}{' '}
                         {values.partySize === 1 ? 'person' : 'people'}
@@ -282,20 +274,24 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                         max={12}
                         value={values.partySize}
                         onChange={(val) => setFieldValue('partySize', val)}
-                        colorScheme="yellow"
                       >
-                        <SliderTrack bg="yellow.100">
-                          <SliderFilledTrack />
+                        <SliderTrack bg="var(--secondary-beige)">
+                          <SliderFilledTrack bg="var(--primary-yellow)" />
                         </SliderTrack>
-                        <SliderThumb boxSize={5}>
-                          <Box color="yellow.400" />
+                        <SliderThumb
+                          boxSize={5}
+                          bg="var(--primary-green)"
+                          border="2px solid var(--highlight-white)"
+                          _hover={{ transform: 'scale(1.1)', bg: 'var(--primary-green)' }}
+                        >
+                          <Box />
                         </SliderThumb>
                       </Slider>
                       <HStack justifyContent="space-between" mt={1}>
-                        <Text fontSize="xs" color="gray.500">
+                        <Text fontSize="m" color="var(--highlight-dark)">
                           1
                         </Text>
-                        <Text fontSize="xs" color="gray.500">
+                        <Text fontSize="m" color="var(--highlight-dark)">
                           12
                         </Text>
                       </HStack>
@@ -308,8 +304,10 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                         >
                           <FormLabel
                             htmlFor="fullName"
-                            fontWeight="medium"
-                            color={labelColor}
+                            fontWeight="bold"
+                            fontFamily={'var(--font-heading)'}
+                            fontSize={'var(--type-medium)'}
+                            color={'var(--primary-green)'}
                           >
                             Full Name *
                           </FormLabel>
@@ -319,6 +317,12 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                             placeholder="John Doe"
                             variant="filled"
                             focusBorderColor={inputFocusBorderColor}
+                            color="var(--highlight-dark)"
+                            fontFamily={'var(--font-body)'}
+                            borderRadius="var(--border-radius)"
+                            bg="var(--highlight-white)"
+                            _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                            _focus={{ bg: 'var(--highlight-white)', color: 'var(--highlight-dark)' }}
                           />
                           <FormErrorMessage>{errors.fullName}</FormErrorMessage>
                         </FormControl>
@@ -330,8 +334,10 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                         <FormControl isInvalid={form.errors.date && form.touched.date}>
                           <FormLabel
                             htmlFor="date"
-                            fontWeight="medium"
-                            color={labelColor}
+                            fontWeight="bold"
+                            fontFamily={'var(--font-heading)'}
+                            fontSize={'var(--type-medium)'}
+                            color={'var(--primary-green)'}
                           >
                             Reservation Date *
                           </FormLabel>
@@ -342,7 +348,6 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                               selected={field.value ? new Date(field.value) : null}
                               onChange={(val) => {
                                 form.setFieldValue(field.name, val);
-                                // Update available times when date changes
                                 if (val) {
                                   dispatch({ type: 'UPDATE_TIMES', date: val });
                                 }
@@ -354,7 +359,7 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                               wrapperClassName="date-picker-wrapper"
                             />
                             <InputRightElement pointerEvents="none">
-                              <CalendarIcon color={labelColor} />
+                              <CalendarIcon color="var(--highlight-dark)" />
                             </InputRightElement>
                           </InputGroup>
                           <FormErrorMessage>{form.errors.date}</FormErrorMessage>
@@ -367,8 +372,10 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                         <FormControl isInvalid={form.errors.customTime && form.touched.customTime}>
                           <FormLabel
                             htmlFor="customTime"
-                            fontWeight="medium"
-                            color={labelColor}
+                            fontWeight="bold"
+                            fontFamily={'var(--font-heading)'}
+                            fontSize={'var(--type-medium)'}
+                            color={'var(--primary-green)'}
                           >
                             Reservation Time *
                           </FormLabel>
@@ -390,7 +397,7 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                               wrapperClassName="date-picker-wrapper"
                             />
                              <InputRightElement pointerEvents="none">
-                              <TimeIcon color={labelColor} />
+                              <TimeIcon color="var(--highlight-dark)" />
                             </InputRightElement>
                           </InputGroup>
                           <FormErrorMessage>{form.errors.customTime}</FormErrorMessage>
@@ -399,61 +406,142 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                     </Field>
 
                     <Field name="occasion">
-                      {({ field }) => (
+                      {({ field, form }) => (
                         <FormControl>
                           <FormLabel
                             htmlFor="occasion"
-                            fontWeight="medium"
-                            color={labelColor}
+                            fontWeight="bold"
+                            fontFamily={'var(--font-heading)'}
+                            fontSize={'var(--type-medium)'}
+                            color={'var(--primary-green)'}
                           >
                             Occasion
                           </FormLabel>
-                          <Select
-                            {...field}
-                            id="occasion"
-                            variant="filled"
-                            focusBorderColor={inputFocusBorderColor}
-                          >
-                            {occasions.map((occasion) => (
-                              <option key={occasion} value={occasion}>
-                                {occasion}
-                              </option>
-                            ))}
-                          </Select>
+                          <Menu>
+                            <MenuButton
+                              as={Button}
+                              rightIcon={<ChevronDownIcon />}
+                              variant="filled"
+                              bg="var(--highlight-white)"
+                              color="var(--highlight-dark)"
+                              fontFamily="var(--font-body)"
+                              fontWeight="normal"
+                              textAlign="left"
+                              w="full"
+                              justifyContent="space-between"
+                              borderRadius="var(--border-radius)"
+                              _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                              _focus={{
+                                borderColor: "var(--primary-yellow)",
+                                boxShadow: "0 0 0 1px var(--primary-yellow)"
+                              }}
+                            >
+                              {field.value || 'Select occasion'}
+                            </MenuButton>
+                            <MenuList
+                              bg="var(--highlight-white)"
+                              border="none"
+                              boxShadow="lg"
+                              borderRadius="var(--border-radius)"
+                            >
+                              {occasions.map((occasion) => (
+                                <MenuItem
+                                  key={occasion}
+                                  onClick={() => form.setFieldValue('occasion', occasion)}
+                                  bg="var(--highlight-white)"
+                                  color="var(--highlight-dark)"
+                                  fontSize="var(--type-base-rem)"
+                                  fontWeight="normal"
+                                  fontFamily="var(--font-body)"
+                                  _hover={{
+                                    bg: "var(--primary-yellow)",
+                                    color: "var(--highlight-dark)"
+                                  }}
+                                  _focus={{
+                                    bg: "var(--primary-yellow)",
+                                    color: "var(--highlight-dark)"
+                                  }}
+                                >
+                                  {occasion}
+                                </MenuItem>
+                              ))}
+                            </MenuList>
+                          </Menu>
                         </FormControl>
                       )}
                     </Field>
 
                     <Field name="seatingArea">
-                      {({ field }) => (
+                      {({ field, form }) => (
                         <FormControl>
                           <FormLabel
                             htmlFor="seatingArea"
-                            fontWeight="medium"
-                            color={labelColor}
+                            fontWeight="bold"
+                            fontFamily={'var(--font-heading)'}
+                            fontSize={'var(--type-medium)'}
+                            color={'var(--primary-green)'}
                           >
                             Seating
                           </FormLabel>
-                          <Select
-                            {...field}
-                            id="seatingArea"
-                            variant="filled"
-                            focusBorderColor={inputFocusBorderColor}
-                          >
-                            {seatingAreas.map((area) => (
-                              <option key={area} value={area}>
-                                {area}
-                              </option>
-                            ))}
-                          </Select>
+                          <Menu>
+                            <MenuButton
+                              as={Button}
+                              rightIcon={<ChevronDownIcon />}
+                              variant="filled"
+                              bg="var(--highlight-white)"
+                              color="var(--highlight-dark)"
+                              fontFamily="var(--font-body)"
+                              fontWeight="normal"
+                              textAlign="left"
+                              w="full"
+                              justifyContent="space-between"
+                              borderRadius="var(--border-radius)"
+                              _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                              _focus={{
+                                borderColor: "var(--primary-yellow)",
+                                boxShadow: "0 0 0 1px var(--primary-yellow)"
+                              }}
+                            >
+                              {field.value || 'Select seating'}
+                            </MenuButton>
+                            <MenuList
+                              bg="var(--highlight-white)"
+                              border="none"
+                              boxShadow="lg"
+                              borderRadius="var(--border-radius)"
+                            >
+                              {seatingAreas.map((area) => (
+                                <MenuItem
+                                  key={area}
+                                  onClick={() => form.setFieldValue('seatingArea', area)}
+                                  bg="var(--highlight-white)"
+                                  color="var(--highlight-dark)"
+                                  fontSize="var(--type-base-rem)"
+                                  fontWeight="normal"
+                                  fontFamily="var(--font-body)"
+                                  _hover={{
+                                    bg: "var(--primary-yellow)",
+                                    color: "var(--highlight-dark)"
+                                  }}
+                                  _focus={{
+                                    bg: "var(--primary-yellow)",
+                                    color: "var(--highlight-dark)"
+                                  }}
+                                >
+                                  {area}
+                                </MenuItem>
+                              ))}
+                            </MenuList>
+                          </Menu>
                         </FormControl>
                       )}
                     </Field>
 
                     <Button
                       type="submit"
-                      bg="yellow.400"
-                      color="white"
+                      bg="var(--primary-yellow)"
+                      borderRadius={'var(--border-radius)'}
+                      color="var(--highlight-dark)"
                       isLoading={isSubmitting}
                       width="full"
                       size="lg"
@@ -478,9 +566,11 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
             borderRadius="xl"
             boxShadow="md"
           >
-            <Heading as="h2" size="lg" color={textColor} fontWeight="600">
-              Payment Details
-            </Heading>
+            <VStack spacing={2} align="start" w="full">
+              <Heading as="h1" size="lg" color={'var(--primary-green)'} fontWeight="800" textTransform={'uppercase'}>
+                Payment Details
+              </Heading>
+            </VStack>
             <Formik
               initialValues={{
                 cardNumber: '',
@@ -504,22 +594,18 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                   errors.nameOnCard = 'Name can only contain letters and spaces';
                 }
                 
-                // Card number validation
                 if (!values.cardNumber) {
                   errors.cardNumber = 'Please enter a card number';
                 } else {
-                  // Convert to string if it's a number
                   const cardNumberStr = String(values.cardNumber);
                   const cardNum = cardNumberStr.replace(/\s/g, '');
                   
                   if (!/^\d{16}$/.test(cardNum)) {
                     errors.cardNumber = 'Please enter a valid 16-digit card number';
                   } else {
-                    // Enhanced Luhn algorithm check
                     let sum = 0;
                     let shouldDouble = false;
                     
-                    // Process digits from right to left
                     for (let i = cardNum.length - 1; i >= 0; i--) {
                       let digit = parseInt(cardNum[i]);
                       
@@ -538,13 +624,12 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                       errors.cardNumber = 'Please enter a valid card number';
                     }
                     
-                    // Additional validation: reject obvious test/fake numbers
                     const invalidPatterns = [
-                      /^(\d)\1+$/, // All same digits (1111111111111111)
-                      /^(0123456789|1234567890|9876543210|0987654321).*$/, // Sequential
-                      /^1234.*$/, // Numbers starting with 1234
-                      /^0000.*$/, // Numbers starting with 0000
-                      /^(1111|2222|3333|4444|5555|6666|7777|8888|9999).*$/, // Repeating groups
+                      /^(\d)\1+$/,
+                      /^(0123456789|1234567890|9876543210|0987654321).*$/,
+                      /^1234.*$/,
+                      /^0000.*$/,
+                      /^(1111|2222|3333|4444|5555|6666|7777|8888|9999).*$/,
                     ];
                     
                     const commonTestNumbers = [
@@ -583,7 +668,6 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                   }
                 }
                 
-                // CVV validation
                 if (!values.cvv) {
                   errors.cvv = 'Please enter CVV';
                 } else {
@@ -596,33 +680,24 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                 return errors;
               }}
               onSubmit={async (values, { setSubmitting, resetForm }) => {
-                console.log('Payment form submitted:', values);
-                
-                // Use the submitForm function passed as props for the complete booking submission
                 if (submitForm) {
                   try {
                     const success = submitForm({
                       payment: values,
-                      // You might want to include reservation details here too
                       timestamp: new Date().toISOString()
                     });
                     
                     if (success) {
-                      console.log('Complete booking successfully submitted to API');
                       resetForm();
-                      // Navigation will be handled by submitForm function
-                    } else {
-                      console.error('Failed to submit complete booking to API');
-                      // Don't reset form on failure so user can retry
                     }
                   } catch (error) {
-                    console.error('Error during form submission:', error);
+                    if (process.env.NODE_ENV === 'development') {
+                      console.error('Error during form submission:', error);
+                    }
                   } finally {
                     setSubmitting(false);
                   }
                 } else {
-                  // Fallback behavior if submitForm is not provided
-                  console.log('No submitForm function provided, using fallback');
                   setTimeout(() => {
                     resetForm();
                     setSubmitting(false);
@@ -637,7 +712,13 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                     <Field name="nameOnCard">
                       {({ field }) => (
                         <FormControl isInvalid={errors.nameOnCard && touched.nameOnCard}>
-                          <FormLabel htmlFor="nameOnCard" fontWeight="medium" color={labelColor}>
+                          <FormLabel 
+                            htmlFor="nameOnCard" 
+                            fontWeight="bold"
+                            fontFamily={'var(--font-heading)'}
+                            fontSize={'var(--type-medium)'}
+                            color={'var(--primary-green)'}
+                          >
                             Name on Card *
                           </FormLabel>
                           <Input
@@ -646,6 +727,12 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                             placeholder="John Doe"
                             variant="filled"
                             focusBorderColor={inputFocusBorderColor}
+                            color="var(--highlight-dark)"
+                            fontFamily={'var(--font-body)'}
+                            borderRadius="var(--border-radius)"
+                            bg="var(--highlight-white)"
+                            _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                            _focus={{ bg: 'var(--highlight-white)', color: 'var(--highlight-dark)' }}
                           />
                           <FormErrorMessage>{errors.nameOnCard}</FormErrorMessage>
                         </FormControl>
@@ -655,7 +742,13 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                     <Field name="cardNumber">
                       {({ field }) => (
                         <FormControl isInvalid={errors.cardNumber && touched.cardNumber}>
-                          <FormLabel htmlFor="cardNumber" fontWeight="medium" color={labelColor}>
+                          <FormLabel 
+                            htmlFor="cardNumber" 
+                            fontWeight="bold"
+                            fontFamily={'var(--font-heading)'}
+                            fontSize={'var(--type-medium)'}
+                            color={'var(--primary-green)'}
+                          >
                             Card Number *
                           </FormLabel>
                           <Input
@@ -664,6 +757,12 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                             placeholder="1234567890123456"
                             variant="filled"
                             focusBorderColor={inputFocusBorderColor}
+                            color="var(--highlight-dark)"
+                            fontFamily={'var(--font-body)'}
+                            borderRadius="var(--border-radius)"
+                            bg="var(--highlight-white)"
+                            _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                            _focus={{ bg: 'var(--highlight-white)', color: 'var(--highlight-dark)' }}
                             type="text"
                             inputMode="numeric"
                             pattern="[0-9]*"
@@ -677,7 +776,13 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                       <Field name="expiryDate">
                         {({ field }) => (
                           <FormControl isInvalid={errors.expiryDate && touched.expiryDate} flex={1}>
-                            <FormLabel htmlFor="expiryDate" fontWeight="medium" color={labelColor}>
+                            <FormLabel 
+                              htmlFor="expiryDate" 
+                              fontWeight="bold"
+                              fontFamily={'var(--font-heading)'}
+                              fontSize={'var(--type-medium)'}
+                              color={'var(--primary-green)'}
+                            >
                               Expiry Date *
                             </FormLabel>
                             <Input
@@ -686,6 +791,12 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                               placeholder="MM/YY"
                               variant="filled"
                               focusBorderColor={inputFocusBorderColor}
+                              color="var(--highlight-dark)"
+                              fontFamily={'var(--font-body)'}
+                              borderRadius="var(--border-radius)"
+                              bg="var(--highlight-white)"
+                              _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                              _focus={{ bg: 'var(--highlight-white)', color: 'var(--highlight-dark)' }}
                             />
                             <FormErrorMessage>{errors.expiryDate}</FormErrorMessage>
                           </FormControl>
@@ -695,7 +806,13 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                       <Field name="cvv">
                         {({ field }) => (
                           <FormControl isInvalid={errors.cvv && touched.cvv} flex={1}>
-                            <FormLabel htmlFor="cvv" fontWeight="medium" color={labelColor}>
+                            <FormLabel 
+                              htmlFor="cvv" 
+                              fontWeight="bold"
+                              fontFamily={'var(--font-heading)'}
+                              fontSize={'var(--type-medium)'}
+                              color={'var(--primary-green)'}
+                            >
                               CVV *
                             </FormLabel>
                             <Input
@@ -704,6 +821,12 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
                               placeholder="123"
                               variant="filled"
                               focusBorderColor={inputFocusBorderColor}
+                              color="var(--highlight-dark)"
+                              fontFamily={'var(--font-body)'}
+                              borderRadius="var(--border-radius)"
+                              bg="var(--highlight-white)"
+                              _hover={{ bg: 'var(--primary-yellow)', color: 'var(--highlight-dark)' }}
+                              _focus={{ bg: 'var(--highlight-white)', color: 'var(--highlight-dark)' }}
                               type="text"
                               inputMode="numeric"
                               pattern="[0-9]*"
@@ -717,8 +840,9 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
 
                     <Button
                       type="submit"
-                      bg="yellow.400"
-                      color="white"
+                      bg="var(--primary-yellow)"
+                      borderRadius={'var(--border-radius)'}
+                      color="var(--highlight-dark)"
                       isLoading={isSubmitting}
                       width="full"
                       size="lg"
@@ -778,10 +902,9 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
   );
 };
 
-// Default props to handle cases where props are not provided
-ReservationForm.defaultProps = {
-  submitForm: null,
-  onReservationData: null
+ReservationForm.propTypes = {
+  submitForm: PropTypes.func,
+  onReservationData: PropTypes.func
 };
 
 export default ReservationForm;

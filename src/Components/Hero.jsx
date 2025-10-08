@@ -1,16 +1,17 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '../Styles/Hero.css';
 
 function Hero({
-  title,
-  subtitle,
-  description,
-  children,
-  imageSrc,
-  imageAlt,
-  buttonText,
-  buttonLink,
-  onButtonClick
+  title = null,
+  subtitle = null,
+  description = null,
+  children = null,
+  imageSrc = null,
+  imageAlt = 'Hero image',
+  buttonText = null,
+  buttonLink = null,
+  onButtonClick = null
 }) {
   return (
     <div className="hero">
@@ -37,5 +38,17 @@ function Hero({
     </div>
   );
 }
+
+Hero.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  description: PropTypes.string,
+  children: PropTypes.node,
+  imageSrc: PropTypes.string,
+  imageAlt: PropTypes.string,
+  buttonText: PropTypes.string,
+  buttonLink: PropTypes.string,
+  onButtonClick: PropTypes.func
+};
 
 export default Hero;
