@@ -3,9 +3,11 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: #f0f0f0;
+  background-color: var(--highlight-white);
   width: 100%;
   flex-wrap: wrap;
+  max-width: 1636px;
+  margin: 0 auto;
 }
 
 nav ul {
@@ -13,7 +15,6 @@ nav ul {
   display: flex;
   gap: 15px;
   margin: 0;
-  padding-right: 20px;
   flex-wrap: wrap;
 }
 
@@ -31,10 +32,10 @@ nav ul {
   }
 }
 
-nav a {
-  text-decoration: none;
-  color: #333;
+nav li {
+  color: var(--highlight-dark);
+  font-family: var(--font-body);
+  font-size: var(--type-medium);
   font-weight: bold;
   text-transform: uppercase;
-  padding: 0px ;
 }

@@ -738,7 +738,7 @@ const ReservationForm = ({ submitForm, onReservationData }) => {
         <VStack
           className="images-section"
           w={{ base: '100%', md: '50%' }}
-          spacing={6} // Ensure no intrinsic spacing
+          spacing={6}
           alignItems="stretch"
           display={{ base: 'none', md: 'flex' }}
         >

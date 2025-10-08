@@ -1,74 +1,69 @@
 footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 40px 10%;
-  background-color: #ffffe0;
-  flex-wrap: wrap;
-  width: 100%;
-  gap: 30px;
+    padding: 50px 20px;
+    background-color: var(--primary-green);
+    color: var(--highlight-white);
 }
 
-footer img, footer p {
-  align-self: flex-start;
-  max-width: 100%;
+.footer-container {
+    max-width: 1636px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+footer img {
+    max-width: 200px;
+    height: auto;
+    flex-shrink: 0;
 }
 
 footer section {
-  flex: 1 1 200px;
-  min-width: 200px;
-  padding: 10px;
-  text-align: left;
+    flex: 1 1 180px;
+    min-width: 180px;
 }
 
 footer h4 {
-  margin-bottom: 15px;
-  height: 24px;
-  display: flex;
-  align-items: center;
+    color: var(--primary-yellow);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+footer ul li {
+    font-family: var(--font-body);
+    color: var(--highlight-white);
+    font-size: var(--type-medium);
+    font-weight: 400;
+    margin-bottom: 10px;
 }
 
 footer a {
-  text-decoration: none;
-  color: #333;
+    text-decoration: none;
+    color: var(--highlight-white);
 }
 
-footer section ul {
-  padding: 0;
-  list-style: none;
+@media (max-width: 900px) {
+    .footer-container {
+        justify-content: flex-start;
+    }
 }
 
-footer section ul li {
-  margin-bottom: 8px;
-}
-
-@media (max-width: 768px) {
-  footer {
-    padding: 30px 5%;
-    justify-content: flex-start;
-    gap: 20px;
-  }
-
-  footer section {
-    flex: 1 1 150px;
-    min-width: 150px;
-  }
-}
-
-@media (max-width: 480px) {
-  footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 20px 15px;
-  }
-
-  footer section {
-    width: 100%;
-    text-align: center;
-  }
-
-  footer h4 {
-    justify-content: center;
-  }
+@media (max-width: 540px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    footer {
+        text-align: center;
+    }
 }

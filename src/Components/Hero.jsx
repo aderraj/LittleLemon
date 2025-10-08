@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import '../Styles/Main.css';
+import '../Styles/Hero.css';
 
 function Hero({
   title,

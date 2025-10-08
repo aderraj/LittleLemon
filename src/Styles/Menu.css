@@ -1,27 +1,28 @@
+.menu-section {
+    padding-bottom: 40px;
+}
+
 .highlights {
     display: flex;
     justify-content: space-between;
-    max-width: 1200px;
+    align-items: center;
+    max-width: 1636px;
     margin: 40px auto;
     padding: 0 20px;
     gap: 30px;
     flex-wrap: wrap;
-    align-items: center;
 }
 
 .highlights h1 {
-    font-size: 2.5rem;
-    color: #333;
-    margin: 0;
+    font-size: 5rem;
+    color: var(--highlight-dark);
 }
 
 .highlights button {
-    background-color: #495e57;
-    color: white;
+    background-color: var(--primary-yellow);
+    color: var(--highlight-dark);
     border: none;
     padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -32,7 +33,7 @@
 
 .scrollable-menu {
     position: relative;
-    max-width: 1200px;
+    max-width: 1636px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -41,8 +42,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(73, 94, 87, 0.8);
-    color: white;
+    background-color: var(--primary-green);
+    color: var(--highlight-white);
     border: none;
     width: 40px;
     height: 40px;
@@ -70,6 +71,7 @@
 
 .scrollable-card-container {
     display: flex;
+    justify-content: flex-start;
     overflow-x: auto;
     scroll-behavior: smooth;
     gap: 20px;
@@ -83,23 +85,23 @@
 }
 
 .scrollable-card-container .card {
-    flex: 0 0 280px;
-    min-width: 280px;
+    flex: 0 0 220px;
+    min-width: 220px;
 }
 
 /* Large screens */
 @media (min-width: 1201px) {
-    .highlights {
-        justify-content: space-between;
-        gap: 40px;
+    .scrollable-menu {
+        max-width: 1636px;
     }
-}
 
-/* Medium screens */
-@media (max-width: 1200px) {
-    .highlights {
-        justify-content: space-between;
-        gap: 25px;
+    .scrollable-card-container {
+        justify-content: center;
+    }
+    
+    .scrollable-card-container .card {
+        flex: 0 0 302px;
+        min-width: 302px;
     }
 }
 
@@ -111,11 +113,11 @@
         margin: 30px auto;
         gap: 20px;
     }
-    
+
     .highlights h1 {
         font-size: 2rem;
     }
-    
+
     .scrollable-menu {
         padding: 0 10px;
     }
@@ -133,12 +135,12 @@
     .scroll-right {
         right: -5px;
     }
-    
+
     .scrollable-card-container {
         gap: 15px;
-        padding: 20px 40px;
+        padding: 20px 40px; 
     }
-    
+
     .scrollable-card-container .card {
         flex: 0 0 200px;
         min-width: 200px;
@@ -152,20 +154,20 @@
         padding: 0 15px;
         gap: 15px;
     }
-    
+
     .highlights h1 {
         font-size: 1.8rem;
     }
-    
+
     .highlights button {
         padding: 10px 20px;
         font-size: 1rem;
     }
-    
+
     .scrollable-menu {
         padding: 0 5px;
     }
-    
+
     .scroll-btn {
         width: 28px;
         height: 28px;
@@ -179,48 +181,14 @@
     .scroll-right {
         right: 0;
     }
-    
+
     .scrollable-card-container {
         gap: 10px;
         padding: 20px 35px;
     }
-    
+
     .scrollable-card-container .card {
         flex: 0 0 160px;
         min-width: 160px;
     }
 }
-
-/* Extra small screens */
-@media (max-width: 360px) {
-    .highlights h1 {
-        font-size: 1.6rem;
-    }
-    
-    .highlights button {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .scrollable-menu {
-        padding: 0;
-    }
-    
-    .scroll-btn {
-        width: 25px;
-        height: 25px;
-        font-size: 0.9rem;
-    }
-    
-    .scrollable-card-container {
-        gap: 8px;
-        padding: 15px 30px;
-    }
-    
-    .scrollable-card-container .card {
-        flex: 0 0 140px;
-        min-width: 140px;
-    }
-}
-
-@import './Card.css';

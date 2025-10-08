@@ -5,11 +5,10 @@ function Card({ title, price, description, image }) {
         <div className="card">
             <img src={image} alt={title} />
             <section className="card-header">
-                <h4>{title}</h4>
+                <h3>{title}</h3>
                 <span>{price}</span>
             </section>
             <p>{description}</p>
-            <button>Order a delivery</button>
         </div>
     );
 }
