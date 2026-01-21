@@ -114,8 +114,8 @@ npm --version
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/aderraj/FrontEndCaptsone.git
-cd FrontEndCaptsone
+git clone https://github.com/aderraj/LittleLemon.git
+cd LittleLemon
 ```
 
 2. **Install dependencies**
@@ -184,7 +184,7 @@ npm test -- --coverage
 ## 📁 Project Structure
 
 ```
-FrontEndCaptsone/
+LittleLemon/
 ├── public/                      # Static files
 │   ├── index.html              # HTML template
 │   ├── Logo.png                # Restaurant logo
@@ -359,7 +359,7 @@ npm install --save-dev gh-pages
 
 2. Add to package.json:
 ```json
-"homepage": "https://yourusername.github.io/FrontEndCaptsone",
+"homepage": "https://yourusername.github.io/LittleLemon",
 "scripts": {
   "predeploy": "npm run build",
   "deploy": "gh-pages -d build"
